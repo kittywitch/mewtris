@@ -194,9 +194,9 @@ in {
             }
             (mkIf (config.runner == "wine") {
               startLine = pkgs.writeShellScript "${config.name}" ''
-                export PATH="$PATH:${lib.makeBinPath (with pkgs; [
+                export PATH="${lib.makeBinPath (with pkgs; [
                   coreutils
-                ] ++ cfg.pathPackages)}"
+                ] ++ cfg.pathPackages)}:$PATH"
                 ${cfg.globalPrerun}
                 ${config.prerun}
                 ${optionalString (config.gameFolder != null) ''
