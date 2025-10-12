@@ -200,7 +200,7 @@ in {
                 ${cfg.globalPrerun}
                 ${config.prerun}
                 ${optionalString (config.gameFolder != null) ''
-                  "cd ${config.gameFolder}"
+                  cd "${config.gameFolder}"
                 ''}
                 "${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
               '';
