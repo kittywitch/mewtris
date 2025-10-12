@@ -197,7 +197,6 @@ in {
                 export PATH="$PATH:${lib.makeBinPath (with pkgs; [
                   coreutils
                 ] ++ cfg.pathPackages)}"
-                ])}"
                 ${cfg.globalPrerun}
                 ${config.prerun}
                 ${optionalString (config.gameFolder != null) ''
