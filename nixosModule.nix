@@ -244,17 +244,17 @@ in {
     mkIf cfg.enable {
       environment.systemPackages = mkIf cfg.createDesktopItems (concatLists (mapAttrsToList (_k: v: let
           start = pkgs.makeDesktopItem {
-            inherit (v) name;
+            name = "mewtris-${v.name}-start";
             desktopName = v.long_name;
             exec = "${getExe' pkgs.systemd "systemctl"} --user start ${v.name}";
           };
           stop = pkgs.makeDesktopItem {
-            name = "${v.name}-stop";
+            name = "mewtris-${v.name}-stop";
             desktopName = "Stop ${v.long_name}";
             exec = "${getExe' pkgs.systemd "systemctl"} --user stop ${v.name}";
           };
           kill = pkgs.makeDesktopItem {
-            name = "${v.name}-kill";
+            name = "mewtris-${v.name}-kill";
             desktopName = "Kill ${v.long_name}";
             exec = "${getExe' pkgs.systemd "systemctl"} --user kill --signal=SIGKILL ${v.name}";
           };
