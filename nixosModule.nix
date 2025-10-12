@@ -72,6 +72,11 @@ in {
       type = nullOr path;
       default = null;
     };
+    pathPackages = mkOption {
+      description = "Packages to add to each service's path";
+      type = listOf package;
+      default = [];
+    };
     runnerEnvironments = mkOption {
       description = "Sets of environments to compose for your games";
       type = attrsOf (attrsOf str);
@@ -191,10 +196,7 @@ in {
               startLine = pkgs.writeShellScript "${config.name}" ''
                 export PATH="$PATH:${lib.makeBinPath (with pkgs; [
                   coreutils
-                  umu-launcher
-                  mangohud
-                  vkbasalt
-                  wine-tkg
+                ] ++ cfg.pathPackages)}"
                 ])}"
                 ${cfg.globalPrerun}
                 ${config.prerun}
@@ -218,11 +220,7 @@ in {
                 pkgs.writeShellScript "${config.name}" ''
                   export PATH="$PATH:${lib.makeBinPath (with pkgs; [
                     coreutils
-                    umu-launcher
-                    mangohud
-                    vkbasalt
-                    wine-tkg
-                  ])}"
+                  ] ++ cfg.pathPackages)}"
                   ${cfg.globalPrerun}
                   ${config.prerun}
                   cd "${config.gameFolder}"
