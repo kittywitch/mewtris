@@ -139,6 +139,7 @@ in {
             type = listOf str;
             default = [];
           };
+          enableGamemode = mkEnableOption "Use gamemode for this application";
           prefixArch = mkOption {
             description = "Wine prefix architecture";
             type = enum [
@@ -193,7 +194,9 @@ in {
               };
             }
             (mkIf (config.runner == "wine") {
-              startLine = pkgs.writeShellScript "${config.name}" ''
+              startLine = let
+                  gamemode = if config.gamemode == true then "${getExe' pkgs.gamemode "gamemoderun"}" else "";
+                in pkgs.writeShellScript "${config.name}" ''
                 export PATH="${lib.makeBinPath (with pkgs; [
                   coreutils
                 ] ++ cfg.pathPackages)}:$PATH"
@@ -202,7 +205,7 @@ in {
                 ${optionalString (config.gameFolder != null) ''
                   cd "${config.gameFolder}"
                 ''}
-                "${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
+                "${gamemode} ${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
               '';
             })
             (mkIf (config.runner == "proton") {
@@ -215,6 +218,7 @@ in {
                 };
               startLine = let
                 protonLauncher = getExe' cfg.umuLauncher "umu-run";
+                gamemode = if config.gamemode == true then "${getExe' pkgs.gamemode "gamemoderun"}" else "";
               in
                 pkgs.writeShellScript "${config.name}" ''
                   export PATH="$PATH:${lib.makeBinPath (with pkgs; [
@@ -223,7 +227,7 @@ in {
                   ${cfg.globalPrerun}
                   ${config.prerun}
                   cd "${config.gameFolder}"
-                  "${protonLauncher}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
+                  "${gamemode} ${protonLauncher}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
                 '';
             })
           ];
