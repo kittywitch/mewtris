@@ -199,13 +199,14 @@ in {
                 in pkgs.writeShellScript "${config.name}" ''
                 export PATH="${lib.makeBinPath (with pkgs; [
                   coreutils
+                  gamemode
                 ] ++ cfg.pathPackages)}:$PATH"
                 ${cfg.globalPrerun}
                 ${config.prerun}
                 ${optionalString (config.gameFolder != null) ''
                   cd "${config.gameFolder}"
                 ''}
-                "${gamemode} ${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
+                "${gamemode}" "${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
               '';
             })
             (mkIf (config.runner == "proton") {
@@ -227,7 +228,7 @@ in {
                   ${cfg.globalPrerun}
                   ${config.prerun}
                   cd "${config.gameFolder}"
-                  "${gamemode} ${protonLauncher}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
+                  "${gamemode}" "${protonLauncher}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
                 '';
             })
           ];
