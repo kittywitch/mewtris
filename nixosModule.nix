@@ -195,7 +195,7 @@ in {
             }
             (mkIf (config.runner == "wine") {
               startLine = let
-                  gamemode = if config.enableGamemode == true then "${getExe' pkgs.gamemode "gamemoderun"}" else "";
+                  gamemode = if config.enableGamemode == true then ''"${getExe' pkgs.gamemode "gamemoderun"}""'' else "";
                 in pkgs.writeShellScript "${config.name}" ''
                 export PATH="${lib.makeBinPath (with pkgs; [
                   coreutils
@@ -206,7 +206,7 @@ in {
                 ${optionalString (config.gameFolder != null) ''
                   cd "${config.gameFolder}"
                 ''}
-                "${gamemode}" "${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
+                ${gamemode} "${getExe' cfg.runnerVariants.${config.variant} "wine"}" "${config.gameExecutable}" ${escapeShellArgs config.gameArguments}
               '';
             })
             (mkIf (config.runner == "proton") {
@@ -219,7 +219,7 @@ in {
                 };
               startLine = let
                 protonLauncher = getExe' cfg.umuLauncher "umu-run";
-                gamemode = if config.enableGamemode == true then ''"${getExe' pkgs.gamemode "gamemoderun"}"'' else "";
+                  gamemode = if config.enableGamemode == true then ''"${getExe' pkgs.gamemode "gamemoderun"}""'' else "";
               in
                 pkgs.writeShellScript "${config.name}" ''
                   export PATH="$PATH:${lib.makeBinPath (with pkgs; [
